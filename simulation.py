@@ -30,15 +30,17 @@ class Scenario:
 
 
 MODEL_NAMES = {"recent", "genealogical", "ancient"}
+ORIGIN_MODES = {"exclusive", "wider_population"}
 MIXING_PROPORTIONS = {"none": 0.0, "moderate": 0.02, "high": 0.05}
 
 
 def parse_scenario(payload: dict[str, Any]) -> Scenario:
     """Validate intentionally small UI inputs before they reach msprime."""
-    model = payload.get("model", "genealogical")
+    model = payload.get("model")
+    origin_mode = payload.get("origin_mode")
     mixing = payload.get("mixing", "moderate")
-    if model not in MODEL_NAMES:
-        raise SimulationInputError("Choose one of the supported model families.")
+    if origin_mode is not None and origin_mode not in ORIGIN_MODES:
+        raise SimulationInputError("Choose an exclusive pair or a wider population origin.")
     if mixing not in MIXING_PROPORTIONS:
         raise SimulationInputError("Choose none, moderate, or high mixing.")
 
@@ -56,6 +58,15 @@ def parse_scenario(payload: dict[str, Any]) -> Scenario:
         raise SimulationInputError("The wider population must be between 2 and 100,000 people.")
     if not 1 <= replicates <= 12:
         raise SimulationInputError("Run between 1 and 12 replicates at a time.")
+
+    if origin_mode == "exclusive":
+        model = "recent"
+    elif origin_mode == "wider_population":
+        model = "ancient" if adam_time_years >= 100_000 else "genealogical"
+    elif model is None:
+        model = "genealogical"
+    if model not in MODEL_NAMES:
+        raise SimulationInputError("Choose one of the supported model families.")
 
     # Exclusive biological descent rules out a second group by definition.
     if model == "recent":
@@ -203,6 +214,7 @@ def run_simulation(
     return {
         "scenario": {
             "model": scenario.model,
+            "origin_mode": "exclusive" if scenario.model == "recent" else "wider_population",
             "adam_time_years": scenario.adam_time_years,
             "wider_population": scenario.wider_population,
             "mixing": scenario.mixing,

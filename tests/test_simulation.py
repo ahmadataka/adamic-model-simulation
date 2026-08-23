@@ -30,6 +30,13 @@ class SimulationTests(unittest.TestCase):
         scenario = parse_scenario({"model": "recent", "mixing": "high"})
         self.assertEqual(scenario.mixing, "none")
 
+    def test_parameters_derive_an_exclusive_model(self):
+        scenario = parse_scenario(
+            {"origin_mode": "exclusive", "adam_time_years": 6_000, "mixing": "high"}
+        )
+        self.assertEqual(scenario.model, "recent")
+        self.assertEqual(scenario.mixing, "none")
+
 
 if __name__ == "__main__":
     unittest.main()
