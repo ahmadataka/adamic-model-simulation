@@ -48,29 +48,28 @@
     #adamic-lab .al-center { padding: 22px 24px; min-width: 0; }
     #adamic-lab .al-center h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -.02em; }
     #adamic-lab .al-center .al-description { font: 13px/1.42 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); margin: 0 0 21px; }
-    #adamic-lab .al-timeline { position: relative; height: 216px; border: 1px solid var(--al-line); background: var(--al-panel); border-radius: 10px; overflow: hidden; }
+    #adamic-lab .al-timeline { position: relative; height: 92px; border: 1px solid var(--al-line); background: var(--al-panel); border-radius: 10px; overflow: hidden; }
     #adamic-lab .al-era { position: absolute; top: 0; bottom: 0; border-right: 1px dashed color-mix(in srgb, var(--al-line) 75%, transparent); }
     #adamic-lab .al-era:nth-child(1) { left: 0; width: 32%; background: color-mix(in srgb, var(--al-gold) 7%, transparent); }
     #adamic-lab .al-era:nth-child(2) { left: 32%; width: 34%; background: color-mix(in srgb, var(--al-sky) 5%, transparent); }
     #adamic-lab .al-era:nth-child(3) { left: 66%; width: 34%; }
     #adamic-lab .al-era-label { position: absolute; top: 11px; left: 10px; font: 10px ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); white-space: nowrap; }
     #adamic-lab .al-time-marker { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px solid var(--al-clay); z-index: 3; pointer-events: none; }
-    #adamic-lab .al-time-marker span { position: absolute; top: 29px; left: 7px; padding: 3px 5px; background: var(--al-panel); color: var(--al-clay); font: 700 10px/1.1 ui-sans-serif, system-ui, sans-serif; white-space: nowrap; }
-    #adamic-lab .al-pop { position: absolute; border: 2px solid; border-radius: 999px; opacity: .92; }
-    #adamic-lab .al-pop.outside { left: 9%; top: 83px; width: 245px; height: 82px; border-color: var(--al-sky); background: color-mix(in srgb, var(--al-sky) 13%, transparent); }
-    #adamic-lab .al-pop.adam { left: 44%; top: 102px; width: 47px; height: 47px; border-color: var(--al-clay); background: color-mix(in srgb, var(--al-clay) 22%, transparent); z-index: 2; }
-    #adamic-lab .al-pop.descendants { left: 55%; top: 73px; width: 130px; height: 97px; border-color: var(--al-moss); background: color-mix(in srgb, var(--al-moss) 15%, transparent); }
-    #adamic-lab .al-pop.modern { left: 77%; top: 45px; width: 170px; height: 143px; border-color: var(--al-moss); background: color-mix(in srgb, var(--al-moss) 8%, transparent); }
-    #adamic-lab .al-flow { position: absolute; height: 2px; background: var(--al-clay); transform-origin: left center; opacity: .9; }
-    #adamic-lab .al-flow.one { width: 57px; left: 47%; top: 125px; transform: rotate(-17deg); }
-    #adamic-lab .al-flow.two { width: 60px; left: 65%; top: 107px; transform: rotate(-10deg); background: var(--al-moss); }
-    #adamic-lab .al-tag { position: absolute; font: 10px/1.2 ui-sans-serif, system-ui, sans-serif; color: var(--al-ink); white-space: nowrap; }
-    #adamic-lab .al-tag.out { left: 18px; top: 174px; }
-    #adamic-lab .al-tag.ad { left: 41%; top: 158px; color: var(--al-clay); font-weight: 700; }
-    #adamic-lab .al-tag.mix { left: 58%; top: 177px; color: var(--al-moss); font-weight: 700; }
-    #adamic-lab .al-tag.now { right: 11px; top: 194px; }
+    #adamic-lab .al-time-marker span { position: absolute; top: 35px; left: 7px; padding: 3px 5px; background: var(--al-panel); color: var(--al-clay); font: 700 10px/1.1 ui-sans-serif, system-ui, sans-serif; white-space: nowrap; }
     #adamic-lab .al-scale { display: flex; justify-content: space-between; margin-top: 7px; font: 10px ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
-    #adamic-lab .al-diagram-key { margin: 8px 0 0; font: 10px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-timeline-key { margin: 8px 0 0; font: 10px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-ancestry-map { margin-top: 14px; padding: 12px; border: 1px solid var(--al-line); border-radius: 10px; background: color-mix(in srgb, var(--al-panel) 85%, transparent); }
+    #adamic-lab .al-map-grid { display: grid; grid-template-columns: minmax(80px, 1fr) auto minmax(85px, 1fr) auto minmax(80px, 1fr); align-items: center; gap: 7px; }
+    #adamic-lab .al-map-sources { display: grid; gap: 7px; }
+    #adamic-lab .al-map-node { min-height: 46px; display: grid; align-content: center; padding: 8px; border: 1px solid; border-radius: 7px; font: 700 11px/1.2 ui-sans-serif, system-ui, sans-serif; text-align: center; }
+    #adamic-lab .al-map-node small { display: block; margin-top: 3px; font: 10px/1.2 ui-sans-serif, system-ui, sans-serif; font-weight: 400; }
+    #adamic-lab .al-map-pair { color: var(--al-clay); border-color: var(--al-clay); background: color-mix(in srgb, var(--al-clay) 12%, transparent); }
+    #adamic-lab .al-map-other { color: var(--al-sky); border-color: var(--al-sky); background: color-mix(in srgb, var(--al-sky) 10%, transparent); }
+    #adamic-lab .al-map-descendants, #adamic-lab .al-map-living { color: var(--al-moss); border-color: var(--al-moss); background: color-mix(in srgb, var(--al-moss) 9%, transparent); }
+    #adamic-lab .al-map-arrow { color: var(--al-muted); font: 10px/1.2 ui-sans-serif, system-ui, sans-serif; text-align: center; }
+    #adamic-lab .al-map-arrow b { display: block; color: var(--al-moss); font-size: 18px; }
+    #adamic-lab .al-map-note { margin: 10px 0 0; font: 10px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-ancestry-map.is-exclusive .al-map-other { display: none; }
     #adamic-lab .al-reading { margin-top: 19px; padding: 13px 14px; border-left: 3px solid var(--al-moss); background: color-mix(in srgb, var(--al-moss) 8%, transparent); font: 13px/1.42 ui-sans-serif, system-ui, sans-serif; }
     #adamic-lab .al-reading strong { color: var(--al-moss); }
     #adamic-lab .al-meter { margin: 0 0 17px; padding-bottom: 13px; border-bottom: 1px solid var(--al-line); }
@@ -106,7 +105,7 @@
       #adamic-lab .al-center { padding: 19px 16px; }
       #adamic-lab .al-left { display: block; }
       #adamic-lab .al-inputs { padding-top: 0; }
-      #adamic-lab .al-pop.outside { width: 57%; } #adamic-lab .al-pop.modern { width: 35%; }
+      #adamic-lab .al-map-grid { grid-template-columns: 1fr; } #adamic-lab .al-map-arrow b { transform: rotate(90deg); }
       #adamic-lab .al-footer { display: block; } #adamic-lab .al-footer span + span { display: block; margin-top: 4px; }
     }
   </style>
@@ -128,14 +127,22 @@
       <p class="al-kicker">What this scenario means</p>
       <h2 id="al-title">A recent universal family tree</h2>
       <p class="al-description" id="al-description">Over generations, every living person can inherit a place in Adam’s family tree even while most DNA comes from many other ancestors.</p>
-      <div class="al-timeline" aria-label="Illustrated ancestry timeline">
+      <div class="al-timeline" aria-label="Timeline of the selected date">
         <div class="al-era"><span class="al-era-label">deep past</span></div><div class="al-era"></div><div class="al-era"><span class="al-era-label">recorded history</span></div><div class="al-time-marker" id="al-time-marker"><span>selected time</span></div>
-        <div class="al-pop outside"></div><div class="al-pop adam"></div><div class="al-pop descendants"></div><div class="al-pop modern"></div>
-        <div class="al-flow one"></div><div class="al-flow two"></div>
-        <span class="al-tag out">other people</span><span class="al-tag ad">Adam + Eve</span><span class="al-tag mix" id="al-mix-label">intermarriage</span><span class="al-tag now">living populations</span>
       </div>
       <div class="al-scale"><span>1 million years ago</span><span>100,000</span><span>10,000</span><span>today</span></div>
-      <p class="al-diagram-key" id="al-diagram-key"><strong>Diagram key:</strong> outlines are population groups; lines are allowed biological ancestry. This is conceptual, not population size or time to scale.</p>
+      <p class="al-timeline-key"><strong>Timeline only:</strong> the orange marker is the selected date. It does not represent population size or ancestry.</p>
+      <section class="al-ancestry-map" id="al-ancestry-map" aria-label="Biological ancestry structure">
+        <p class="al-kicker">Biological ancestry structure</p>
+        <div class="al-map-grid">
+          <div class="al-map-sources"><div class="al-map-node al-map-pair">Adam + Eve<small>selected pair</small></div><div class="al-map-node al-map-other">Other population<small>outside group</small></div></div>
+          <div class="al-map-arrow"><b>&rarr;</b><span id="al-map-source-label">can contribute DNA</span></div>
+          <div class="al-map-node al-map-descendants">Later population<small>descendants and partners</small></div>
+          <div class="al-map-arrow"><b>&rarr;</b><span>descends into</span></div>
+          <div class="al-map-node al-map-living">Living populations<small>simulated samples</small></div>
+        </div>
+        <p class="al-map-note" id="al-map-note">This map shows which groups are allowed to contribute DNA. It is not a timeline or a population-size chart.</p>
+      </section>
       <div class="al-reading" id="al-reading"><strong>Plain-language reading:</strong> this is compatible with a shared genealogical ancestry claim. It does not say that all of today’s DNA descends only from one pair.</div>
     </main>
     <aside class="al-side al-right">
@@ -172,14 +179,15 @@
       function selectModel(name) {
         const model = models[name];
         activeModel = name;
-        $('#al-title').textContent = model.title; $('#al-description').textContent = model.desc; $('#al-reading').innerHTML = model.reading; $('#al-mix-label').textContent = model.mix;
+        $('#al-title').textContent = model.title; $('#al-description').textContent = model.desc; $('#al-reading').innerHTML = model.reading;
         metric('diversity', model.diversity); metric('admixture', model.admixture); metric('claim', model.claim);
         const exclusive = name === 'recent';
         $('#al-mixing').disabled = exclusive;
         $('#al-mixing-field').classList.toggle('is-unavailable', exclusive);
         $('#al-mixing-note').hidden = !exclusive;
-        root.querySelector('.al-pop.outside').style.display = exclusive ? 'none' : 'block';
-        root.querySelector('.al-tag.out').textContent = exclusive ? '' : 'other population';
+        $('#al-ancestry-map').classList.toggle('is-exclusive', exclusive);
+        $('#al-map-source-label').textContent = exclusive ? 'only this pair contributes DNA' : 'can contribute DNA';
+        $('#al-map-note').textContent = exclusive ? 'Only the selected pair is permitted to contribute DNA under this assumption. This map is not a timeline or a population-size chart.' : 'The selected pair and the wider population can contribute DNA. This map is not a timeline or a population-size chart.';
         if (exclusive) { $('#al-mixing').value = 0; $('#al-mixing-v').textContent = 'not applicable'; }
         else { $('#al-mixing-v').textContent = mixingValues[Number($('#al-mixing').value)]; }
         $('#al-population-label').textContent = exclusive ? 'Population after the origin' : 'Wider population at that time';
@@ -207,9 +215,6 @@
         const position = positions[Number($('#al-date').value)];
         $('#al-time-marker').style.left = position + '%';
         $('#al-time-marker span').textContent = dateValues[Number($('#al-date').value)];
-        $('.al-pop.adam').style.left = 'calc(' + position + '% - 24px)';
-        $('.al-tag.ad').style.left = 'calc(' + position + '% - 31px)';
-        $('#al-diagram-key').innerHTML = '<strong>Diagram key:</strong> outlines are population groups; lines are allowed biological ancestry; the orange marker is the selected time. This is conceptual, not population size or time to scale.';
       }
       $('#al-origin').addEventListener('change', updateScenario);
       $('#al-date').addEventListener('input', (event) => { $('#al-date-v').textContent = dateValues[Number(event.target.value)]; updateScenario(); });
