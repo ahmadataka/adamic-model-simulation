@@ -14,7 +14,7 @@ The included interface concept is designed for non-experts. It lets someone sele
 
 ## Current status
 
-This repository currently contains an interactive **design prototype**, not a validated forward-time or coalescent genetic simulator. Its ratings communicate the evidence tension described in the included research notes; they are not produced by a numerical inference pipeline.
+This repository contains a runnable **simplified coalescent simulation** powered by `msprime`. It produces simulated diversity, segregating-site counts, and mean tree heights from the selected demographic assumptions. The static evidence-fit ratings in the interface remain explanatory; they are not an inference from a human-genome dataset.
 
 Before making quantitative claims, a production simulator should:
 
@@ -26,7 +26,21 @@ Before making quantitative claims, a production simulator should:
 
 ## Explore the concept
 
-Open [design/adamic-model-lab.html](design/adamic-model-lab.html) in a browser. It is a self-contained UI concept with no external data collection or network requests.
+Install the dependencies and run the local server:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python app.py
+```
+
+Then open `http://127.0.0.1:5000`. The **Run genetic simulation** button sends the selected assumptions to the local `msprime` engine. No data leaves the machine.
+
+Run the automated checks with:
+
+```bash
+.venv/bin/python -m unittest discover -s tests -v
+```
 
 ## References
 
@@ -39,4 +53,3 @@ Open [design/adamic-model-lab.html](design/adamic-model-lab.html) in a browser. 
 ## Scope and care
 
 The project aims to clarify which model families are compatible, in tension, or underdetermined by particular scientific observations. It does not attempt to establish or falsify theological truth through simulation alone.
-

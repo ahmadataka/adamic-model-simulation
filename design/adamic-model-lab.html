@@ -81,6 +81,13 @@
     #adamic-lab .al-reference { padding-top: 16px; border-top: 1px solid var(--al-line); }
     #adamic-lab .al-reference p { margin: 0; font: 11px/1.45 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-reference a { color: var(--al-moss); font-weight: 700; text-decoration: none; }
+    #adamic-lab .al-real-run { padding-top: 16px; border-top: 1px solid var(--al-line); margin-top: 16px; }
+    #adamic-lab .al-run { width: 100%; padding: 10px 12px; border: 0; border-radius: 7px; background: var(--al-moss); color: #fff; font: 700 12px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer; }
+    #adamic-lab .al-run:hover { filter: brightness(.92); } #adamic-lab .al-run:disabled { cursor: wait; opacity: .7; }
+    #adamic-lab .al-run-status { min-height: 32px; margin: 9px 0 0; font: 11px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-real-output { padding: 10px; border-radius: 7px; background: color-mix(in srgb, var(--al-moss) 8%, transparent); font: 11px/1.4 ui-sans-serif, system-ui, sans-serif; }
+    #adamic-lab .al-real-output[hidden] { display: none; }
+    #adamic-lab .al-real-output strong { color: var(--al-moss); }
     #adamic-lab .al-footer { display: flex; justify-content: space-between; gap: 16px; padding: 12px 24px; border-top: 1px solid var(--al-line); font: 11px/1.4 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-footer strong { color: var(--al-ink); }
     @media (max-width: 760px) {
@@ -134,6 +141,7 @@
         <div class="al-meter"><div class="al-meter-head"><span>Ancient DNA &amp; admixture</span><strong id="al-admixture">Fits</strong></div><div class="al-track"><span id="al-adm-bar" class="al-good" style="width:78%"></span></div><small id="al-adm-note">Other human groups and later mixing remain part of the history.</small></div>
         <div class="al-meter"><div class="al-meter-head"><span>Claim this model supports</span><strong id="al-claim">Genealogy</strong></div><div class="al-track"><span id="al-claim-bar" class="al-good" style="width:84%"></span></div><small id="al-claim-note">“Ancestor of everyone” is different from “source of all DNA.”</small></div>
       </section>
+      <section class="al-real-run"><p class="al-kicker">Real simulation</p><button type="button" class="al-run" id="al-run">Run genetic simulation</button><p class="al-run-status" id="al-run-status" role="status">Runs 4 seeded msprime replicates with the selected assumptions.</p><div class="al-real-output" id="al-real-output" hidden><strong>Simulated output</strong><br><span id="al-real-stats"></span><br><span id="al-real-reading"></span></div></section>
       <section class="al-reference"><p class="al-kicker">Why this rating?</p><p id="al-reference">Ratings compare simulated patterns with population diversity, deep coalescence, and evidence of archaic admixture. <a href="#adamic-lab" id="al-source">View the evidence trail</a></p></section>
     </aside>
   </div>
@@ -146,10 +154,13 @@
         genealogical: { title: 'A recent universal family tree', desc: 'Over generations, every living person can inherit a place in Adam’s family tree even while most DNA comes from many other ancestors.', reading: '<strong>Plain-language reading:</strong> this is compatible with a shared genealogical ancestry claim. It does not say that all of today’s DNA descends only from one pair.', diversity: ['Fits', 82, 'al-good', 'A wider population preserves the diversity observed in human genomes.'], admixture: ['Fits', 78, 'al-good', 'Other human groups and later mixing remain part of the history.'], claim: ['Genealogy', 84, 'al-good', '“Ancestor of everyone” is different from “source of all DNA.”'], mix: 'intermarriage' },
         ancient: { title: 'An ancient pair within deep human history', desc: 'Adam and Eve enter far earlier, within a larger archaic population. Genetic signals have more time to overlap with deep population history.', reading: '<strong>Plain-language reading:</strong> this can be less directly constrained than a recent exclusive pair, but present genetics does not uniquely point to a particular ancient pair.', diversity: ['Open question', 58, 'al-warn', 'An ancient placement eases some diversity constraints but does not itself explain the patterns.'], admixture: ['Needs detail', 56, 'al-warn', 'The scenario must specify how later populations and archaic mixing fit together.'], claim: ['Deep ancestry', 61, 'al-warn', 'The evidence may be compatible with several histories, not one unique event.'], mix: 'long-term mixing' }
       };
-      const dateValues = ['6,000 years ago', '6,000 years ago', '100,000 years ago', '800,000 years ago'];
+      const dateValues = ['3,000 years ago', '6,000 years ago', '100,000 years ago', '800,000 years ago'];
+      const dateYears = [3000, 6000, 100000, 800000];
       const populationValues = ['2 people', '100 people', '5,000 people', '20,000 people'];
+      const populationSizes = [2, 100, 5000, 20000];
       const mixingValues = ['none', 'moderate', 'high'];
       const $ = (selector) => root.querySelector(selector);
+      let activeModel = 'genealogical';
       function metric(key, data) {
         const [label, width, klass, note] = data;
         $('#al-' + key).textContent = label;
@@ -159,6 +170,7 @@
       }
       function selectModel(name) {
         const model = models[name];
+        activeModel = name;
         root.querySelectorAll('.al-model').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.model === name)));
         $('#al-title').textContent = model.title; $('#al-description').textContent = model.desc; $('#al-reading').innerHTML = model.reading; $('#al-mix-label').textContent = model.mix;
         metric('diversity', model.diversity); metric('admixture', model.admixture); metric('claim', model.claim);
@@ -166,6 +178,33 @@
       root.querySelectorAll('.al-model').forEach((button) => button.addEventListener('click', () => selectModel(button.dataset.model)));
       [['#al-date', '#al-date-v', dateValues], ['#al-population', '#al-population-v', populationValues], ['#al-mixing', '#al-mixing-v', mixingValues]].forEach(([input, output, values]) => {
         $(input).addEventListener('input', (event) => { $(output).textContent = values[Number(event.target.value)]; });
+      });
+      $('#al-run').addEventListener('click', async () => {
+        const button = $('#al-run');
+        const status = $('#al-run-status');
+        const output = $('#al-real-output');
+        const dateIndex = Number($('#al-date').value);
+        const populationIndex = Number($('#al-population').value);
+        button.disabled = true;
+        status.textContent = 'Simulating ancestry, recombination, and mutations...';
+        output.hidden = true;
+        try {
+          const response = await fetch('/api/simulate', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: activeModel, adam_time_years: dateYears[dateIndex], wider_population: populationSizes[populationIndex], mixing: mixingValues[Number($('#al-mixing').value)], replicates: 4, seed: 20260823 })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Simulation failed.');
+          const stats = result.statistics;
+          $('#al-real-stats').textContent = 'Diversity: ' + stats.pairwise_diversity.mean.toExponential(2) + ' | Segregating sites: ' + Math.round(stats.segregating_sites.mean) + ' | Mean tree height: ' + Math.round(stats.mean_tree_height_generations.mean) + ' generations.';
+          $('#al-real-reading').textContent = result.interpretation;
+          output.hidden = false;
+          status.textContent = result.limitation;
+        } catch (error) {
+          status.textContent = error.message + ' Start the app with: python app.py';
+        } finally {
+          button.disabled = false;
+        }
       });
       $('#al-source').addEventListener('click', (event) => { event.preventDefault(); $('#al-reference').innerHTML = 'Evidence trail: genetic diversity, deep ancestry estimates, and archaic admixture are assessed separately. <a href="#adamic-lab" id="al-source">Return to summary</a>'; });
     })();

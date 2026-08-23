@@ -1,0 +1,30 @@
+import unittest
+
+from simulation import SimulationInputError, parse_scenario, run_simulation
+
+
+class SimulationTests(unittest.TestCase):
+    def test_rejects_unknown_model(self):
+        with self.assertRaises(SimulationInputError):
+            parse_scenario({"model": "unsupported"})
+
+    def test_runs_genealogical_scenario(self):
+        result = run_simulation(
+            {
+                "model": "genealogical",
+                "adam_time_years": 6_000,
+                "wider_population": 5_000,
+                "mixing": "moderate",
+                "replicates": 1,
+                "seed": 7,
+            },
+            sequence_length=10_000,
+            sample_size=4,
+        )
+        self.assertGreater(result["statistics"]["pairwise_diversity"]["mean"], 0)
+        self.assertGreater(result["statistics"]["segregating_sites"]["mean"], 0)
+        self.assertIn("cannot", result["limitation"])
+
+
+if __name__ == "__main__":
+    unittest.main()
