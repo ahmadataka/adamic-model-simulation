@@ -186,6 +186,50 @@ def _comparison_message(scenario: Scenario, diversity_ratio: float) -> str:
     )
 
 
+def _adam_context(scenario: Scenario, diversity_ratio: float) -> dict[str, str]:
+    """Translate a demographic result into the narrower Adam-related question it bears on."""
+    if scenario.model == "recent":
+        age = "recent" if scenario.adam_time_years < 100_000 else "deep-history"
+        return {
+            "answer": (
+                f"This run treats Adam and Eve as the only biological origin {scenario.adam_time_years:,} "
+                f"years ago, a {age} exclusive-origin claim. It leaves {diversity_ratio * 100:.0f}% "
+                "of the DNA diversity in a matched many-ancestor baseline."
+            ),
+            "not_tested": (
+                "This does not test whether Adam is a theological figure or a universal genealogical "
+                "ancestor; it tests only the genetic consequence of exclusive biological descent."
+            ),
+        }
+    if scenario.model == "genealogical":
+        return {
+            "answer": (
+                "This run allows Adam and Eve to enter a wider population. It models the DNA population "
+                "around that claim, not a pedigree proving that they become ancestors of every person."
+            ),
+            "not_tested": (
+                "A genealogical-universality claim needs a separate pedigree model. Genetic ancestry and "
+                "genealogical ancestry are not the same thing."
+            ),
+        }
+    return {
+        "answer": (
+            "This run places a pair within a wider deep-history population. Under those assumptions, "
+            "the DNA pattern does not uniquely identify a particular ancient pair."
+        ),
+        "not_tested": (
+            "The simulation cannot decide whether a historical or theological Adam should be identified "
+            "with a particular archaic population."
+        ),
+    }
+
+
+def _scenario_label(scenario: Scenario) -> str:
+    if scenario.model == "recent":
+        return "ancient_exclusive_pair" if scenario.adam_time_years >= 100_000 else "recent_exclusive_pair"
+    return scenario.model
+
+
 def run_simulation(
     payload: dict[str, Any],
     *,
@@ -213,7 +257,7 @@ def run_simulation(
     )
     return {
         "scenario": {
-            "model": scenario.model,
+            "model": _scenario_label(scenario),
             "origin_mode": "exclusive" if scenario.model == "recent" else "wider_population",
             "adam_time_years": scenario.adam_time_years,
             "wider_population": scenario.wider_population,
@@ -233,6 +277,7 @@ def run_simulation(
             "diversity_ratio": diversity_ratio,
             "message": _comparison_message(scenario, diversity_ratio),
         },
+        "adam_context": _adam_context(scenario, diversity_ratio),
         "assumptions": {
             "years_per_generation": YEARS_PER_GENERATION,
             "mutation_rate_per_base_per_generation": MUTATION_RATE,

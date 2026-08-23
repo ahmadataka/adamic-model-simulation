@@ -24,6 +24,7 @@ class SimulationTests(unittest.TestCase):
         self.assertGreater(result["statistics"]["pairwise_diversity"]["mean"], 0)
         self.assertGreater(result["statistics"]["segregating_sites"]["mean"], 0)
         self.assertEqual(result["comparison"]["diversity_ratio"], 1.0)
+        self.assertIn("not a pedigree", result["adam_context"]["answer"])
         self.assertIn("cannot", result["limitation"])
 
     def test_exclusive_model_forces_mixing_to_none(self):
@@ -36,6 +37,14 @@ class SimulationTests(unittest.TestCase):
         )
         self.assertEqual(scenario.model, "recent")
         self.assertEqual(scenario.mixing, "none")
+
+    def test_deep_exclusive_result_is_not_labeled_recent(self):
+        result = run_simulation(
+            {"origin_mode": "exclusive", "adam_time_years": 800_000, "replicates": 1},
+            sequence_length=10_000,
+            sample_size=4,
+        )
+        self.assertEqual(result["scenario"]["model"], "ancient_exclusive_pair")
 
 
 if __name__ == "__main__":

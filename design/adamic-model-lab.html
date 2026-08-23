@@ -54,6 +54,8 @@
     #adamic-lab .al-era:nth-child(2) { left: 32%; width: 34%; background: color-mix(in srgb, var(--al-sky) 5%, transparent); }
     #adamic-lab .al-era:nth-child(3) { left: 66%; width: 34%; }
     #adamic-lab .al-era-label { position: absolute; top: 11px; left: 10px; font: 10px ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); white-space: nowrap; }
+    #adamic-lab .al-time-marker { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px solid var(--al-clay); z-index: 3; pointer-events: none; }
+    #adamic-lab .al-time-marker span { position: absolute; top: 29px; left: 7px; padding: 3px 5px; background: var(--al-panel); color: var(--al-clay); font: 700 10px/1.1 ui-sans-serif, system-ui, sans-serif; white-space: nowrap; }
     #adamic-lab .al-pop { position: absolute; border: 2px solid; border-radius: 999px; opacity: .92; }
     #adamic-lab .al-pop.outside { left: 9%; top: 83px; width: 245px; height: 82px; border-color: var(--al-sky); background: color-mix(in srgb, var(--al-sky) 13%, transparent); }
     #adamic-lab .al-pop.adam { left: 44%; top: 102px; width: 47px; height: 47px; border-color: var(--al-clay); background: color-mix(in srgb, var(--al-clay) 22%, transparent); z-index: 2; }
@@ -68,15 +70,14 @@
     #adamic-lab .al-tag.mix { left: 58%; top: 177px; color: var(--al-moss); font-weight: 700; }
     #adamic-lab .al-tag.now { right: 11px; top: 194px; }
     #adamic-lab .al-scale { display: flex; justify-content: space-between; margin-top: 7px; font: 10px ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-diagram-key { margin: 8px 0 0; font: 10px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-reading { margin-top: 19px; padding: 13px 14px; border-left: 3px solid var(--al-moss); background: color-mix(in srgb, var(--al-moss) 8%, transparent); font: 13px/1.42 ui-sans-serif, system-ui, sans-serif; }
     #adamic-lab .al-reading strong { color: var(--al-moss); }
-    #adamic-lab .al-meter { margin: 0 0 20px; }
+    #adamic-lab .al-meter { margin: 0 0 17px; padding-bottom: 13px; border-bottom: 1px solid var(--al-line); }
     #adamic-lab .al-meter-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font: 12px/1.3 ui-sans-serif, system-ui, sans-serif; }
     #adamic-lab .al-meter-head strong { font: 700 14px Georgia, serif; }
-    #adamic-lab .al-track { height: 9px; display: flex; overflow: hidden; border-radius: 999px; background: var(--al-line); margin-top: 7px; }
-    #adamic-lab .al-track span { display: block; height: 100%; }
-    #adamic-lab .al-good { background: var(--al-moss); } .al-warn { background: var(--al-gold); } .al-bad { background: var(--al-clay); }
     #adamic-lab .al-meter small { display: block; margin-top: 6px; font: 11px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-evidence-type { display: block; margin-top: 7px; font: 700 10px/1.3 ui-sans-serif, system-ui, sans-serif; color: var(--al-moss); }
     #adamic-lab .al-reference { padding-top: 16px; border-top: 1px solid var(--al-line); }
     #adamic-lab .al-reference p { margin: 0; font: 11px/1.45 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-reference a { color: var(--al-moss); font-weight: 700; text-decoration: none; }
@@ -91,6 +92,8 @@
     #adamic-lab .al-result-grid div { padding: 7px; border: 1px solid color-mix(in srgb, var(--al-moss) 20%, transparent); background: var(--al-panel); }
     #adamic-lab .al-result-grid span { display: block; font: 10px/1.2 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-result-grid b { display: block; margin-top: 3px; font: 700 13px/1.2 Georgia, serif; color: var(--al-ink); }
+    #adamic-lab .al-adam-answer { margin: 10px 0 0; padding-top: 9px; border-top: 1px solid color-mix(in srgb, var(--al-moss) 20%, transparent); }
+    #adamic-lab .al-adam-answer span { display: block; margin-bottom: 3px; font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif; color: var(--al-moss); text-transform: uppercase; letter-spacing: .06em; }
     #adamic-lab .al-footer { display: flex; justify-content: space-between; gap: 16px; padding: 12px 24px; border-top: 1px solid var(--al-line); font: 11px/1.4 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-footer strong { color: var(--al-ink); }
     @media (max-width: 760px) {
@@ -126,22 +129,23 @@
       <h2 id="al-title">A recent universal family tree</h2>
       <p class="al-description" id="al-description">Over generations, every living person can inherit a place in Adam’s family tree even while most DNA comes from many other ancestors.</p>
       <div class="al-timeline" aria-label="Illustrated ancestry timeline">
-        <div class="al-era"><span class="al-era-label">deep past</span></div><div class="al-era"><span class="al-era-label">Adam’s time</span></div><div class="al-era"><span class="al-era-label">recorded history</span></div>
+        <div class="al-era"><span class="al-era-label">deep past</span></div><div class="al-era"></div><div class="al-era"><span class="al-era-label">recorded history</span></div><div class="al-time-marker" id="al-time-marker"><span>selected time</span></div>
         <div class="al-pop outside"></div><div class="al-pop adam"></div><div class="al-pop descendants"></div><div class="al-pop modern"></div>
         <div class="al-flow one"></div><div class="al-flow two"></div>
         <span class="al-tag out">other people</span><span class="al-tag ad">Adam + Eve</span><span class="al-tag mix" id="al-mix-label">intermarriage</span><span class="al-tag now">living populations</span>
       </div>
       <div class="al-scale"><span>1 million years ago</span><span>100,000</span><span>10,000</span><span>today</span></div>
+      <p class="al-diagram-key" id="al-diagram-key"><strong>Diagram key:</strong> outlines are population groups; lines are allowed biological ancestry. This is conceptual, not population size or time to scale.</p>
       <div class="al-reading" id="al-reading"><strong>Plain-language reading:</strong> this is compatible with a shared genealogical ancestry claim. It does not say that all of today’s DNA descends only from one pair.</div>
     </main>
     <aside class="al-side al-right">
-      <section><p class="al-kicker">Evidence fit</p>
-        <div class="al-meter"><div class="al-meter-head"><span>Genetic diversity</span><strong id="al-diversity">Fits</strong></div><div class="al-track"><span id="al-div-bar" class="al-good" style="width:82%"></span></div><small id="al-div-note">A wider population preserves the diversity observed in human genomes.</small></div>
-        <div class="al-meter"><div class="al-meter-head"><span>Ancient DNA &amp; admixture</span><strong id="al-admixture">Fits</strong></div><div class="al-track"><span id="al-adm-bar" class="al-good" style="width:78%"></span></div><small id="al-adm-note">Other human groups and later mixing remain part of the history.</small></div>
-        <div class="al-meter"><div class="al-meter-head"><span>Claim this model supports</span><strong id="al-claim">Genealogy</strong></div><div class="al-track"><span id="al-claim-bar" class="al-good" style="width:84%"></span></div><small id="al-claim-note">“Ancestor of everyone” is different from “source of all DNA.”</small></div>
+      <section><p class="al-kicker">How the checks work</p>
+        <div class="al-meter"><div class="al-meter-head"><span>Population genetics</span><strong id="al-diversity">Compatible baseline</strong></div><small id="al-div-note">Uses the simulation to show diversity consequences. A real empirical fit needs comparison with a human-genome dataset.</small><span class="al-evidence-type">Type: simulated model contrast</span></div>
+        <div class="al-meter"><div class="al-meter-head"><span>Ancient DNA &amp; admixture</span><strong id="al-admixture">Allowed</strong></div><small id="al-adm-note">Checks whether the stated assumption allows the documented fact that human populations exchanged ancestry with other hominins.</small><span class="al-evidence-type">Type: empirical evidence plus logical consistency</span></div>
+        <div class="al-meter"><div class="al-meter-head"><span>Scope of the claim</span><strong id="al-claim">Genealogy</strong></div><small id="al-claim-note">Distinguishes what DNA simulation can test from a claim about universal family-tree ancestry.</small><span class="al-evidence-type">Type: conceptual boundary, not a scientific score</span></div>
       </section>
-      <section class="al-real-run"><p class="al-kicker">Real simulation</p><button type="button" class="al-run" id="al-run">Run genetic simulation</button><p class="al-run-status" id="al-run-status" role="status">Runs 4 seeded msprime replicates with the selected assumptions.</p><div class="al-real-output" id="al-real-output" hidden><strong>What this run produced</strong><div class="al-result-grid"><div><span>DNA differences</span><b id="al-difference-value"></b><span>per 100,000 bases</span></div><div><span>Variable DNA positions</span><b id="al-sites-value"></b><span>in a 1-million-base region</span></div><div><span>Average lineage depth</span><b id="al-depth-value"></b><span>oldest ancestor in each tree</span></div><div><span>Scenario comparison</span><b id="al-comparison-value"></b><span>diversity vs. baseline</span></div></div><span id="al-real-reading"></span></div></section>
-      <section class="al-reference"><p class="al-kicker">Why this rating?</p><p id="al-reference">Ratings compare simulated patterns with population diversity, deep coalescence, and evidence of archaic admixture. <a href="#adamic-lab" id="al-source">View the evidence trail</a></p></section>
+      <section class="al-real-run"><p class="al-kicker">Real simulation</p><button type="button" class="al-run" id="al-run">Run genetic simulation</button><p class="al-run-status" id="al-run-status" role="status">Runs 4 seeded msprime replicates with the selected assumptions.</p><div class="al-real-output" id="al-real-output" hidden><strong>What this run produced</strong><div class="al-result-grid"><div><span>DNA differences</span><b id="al-difference-value"></b><span>per 100,000 bases</span></div><div><span>Variable DNA positions</span><b id="al-sites-value"></b><span>in a 1-million-base region</span></div><div><span>Average lineage depth</span><b id="al-depth-value"></b><span>oldest ancestor in each tree</span></div><div><span>Scenario comparison</span><b id="al-comparison-value"></b><span>diversity vs. baseline</span></div></div><div class="al-adam-answer"><span>What this says about the Adam assumption</span><span id="al-adam-result"></span></div><div class="al-adam-answer"><span>What it does not decide</span><span id="al-not-tested"></span></div></div></section>
+      <section class="al-reference"><p class="al-kicker">How to read these checks</p><p id="al-reference">These checks are not one probability score: they combine a simulated contrast, published empirical constraints, and a statement of which claim the simulation can actually address. <a href="#adamic-lab" id="al-source">View the evidence trail</a></p></section>
     </aside>
   </div>
   <div class="al-footer"><span><strong>Designed for learning:</strong> labels describe evidence tension, not theological truth.</span><span>Every result should open its assumptions and sources.</span></div>
@@ -149,9 +153,9 @@
     (() => {
       const root = document.getElementById('adamic-lab');
       const models = {
-        recent: { title: 'A recent exclusive biological pair', desc: 'All modern human DNA descends from only two people in the recent past. This is a clear claim, and it makes a strong genetic prediction.', reading: '<strong>Plain-language reading:</strong> a recent two-person biological origin leaves much less genetic diversity than we observe. Current population genetics places this scenario under strong tension.', diversity: ['Strong tension', 22, 'al-bad', 'Observed human diversity reflects many ancestral lineages, not a recent two-person origin.'], admixture: ['Strong tension', 18, 'al-bad', 'Known mixing with other human groups conflicts with exclusive descent.'], claim: ['Biological origin', 24, 'al-bad', 'The model makes a direct genetic claim that can be tested.'], mix: 'no outside ancestry' },
-        genealogical: { title: 'A recent universal family tree', desc: 'Over generations, every living person can inherit a place in Adam’s family tree even while most DNA comes from many other ancestors.', reading: '<strong>Plain-language reading:</strong> this is compatible with a shared genealogical ancestry claim. It does not say that all of today’s DNA descends only from one pair.', diversity: ['Fits', 82, 'al-good', 'A wider population preserves the diversity observed in human genomes.'], admixture: ['Fits', 78, 'al-good', 'Other human groups and later mixing remain part of the history.'], claim: ['Genealogy', 84, 'al-good', '“Ancestor of everyone” is different from “source of all DNA.”'], mix: 'intermarriage' },
-        ancient: { title: 'An ancient pair within deep human history', desc: 'Adam and Eve enter far earlier, within a larger archaic population. Genetic signals have more time to overlap with deep population history.', reading: '<strong>Plain-language reading:</strong> this can be less directly constrained than a recent exclusive pair, but present genetics does not uniquely point to a particular ancient pair.', diversity: ['Open question', 58, 'al-warn', 'An ancient placement eases some diversity constraints but does not itself explain the patterns.'], admixture: ['Needs detail', 56, 'al-warn', 'The scenario must specify how later populations and archaic mixing fit together.'], claim: ['Deep ancestry', 61, 'al-warn', 'The evidence may be compatible with several histories, not one unique event.'], mix: 'long-term mixing' }
+        recent: { title: 'An exclusive biological pair', desc: 'All modern human DNA descends from only two people. The selected date determines whether this is a recent or deep-history claim.', reading: '<strong>Plain-language reading:</strong> this is an exclusive biological-descent assumption. The simulation tests its DNA consequences; it does not test a genealogical or theological claim.', diversity: ['Model contrast', 'Shows the diversity consequence of routing every sampled DNA lineage through two people.'], admixture: ['Excluded by assumption', 'Exclusive biological descent does not allow DNA ancestry from a separate outside group.'], claim: ['Biological origin', 'This is a genetic-origin claim, so population genetics can evaluate its demographic consequences.'], mix: 'no outside ancestry' },
+        genealogical: { title: 'A recent pair within a wider population', desc: 'Adam and Eve enter a wider population. Over generations they may become family-tree ancestors while DNA still comes from many people.', reading: '<strong>Plain-language reading:</strong> this model preserves a wider genetic population. It does not prove universal genealogy, which requires a separate pedigree calculation.', diversity: ['Model baseline', 'The simulation preserves multiple ancestral lineages for comparison with an exclusive-pair run.'], admixture: ['Allowed', 'Other human groups and later mixing remain possible under this assumption.'], claim: ['Genealogy', 'The central claim is about family-tree ancestry, which is not identical to genetic ancestry.'], mix: 'intermarriage' },
+        ancient: { title: 'A deep-history pair within a wider population', desc: 'The pair enters far earlier, within a larger population. Genetic observations may be compatible with many such deep demographic histories.', reading: '<strong>Plain-language reading:</strong> moving the pair deep into history does not make the pair genetically identifiable. The population assumptions carry most of the simulated signal.', diversity: ['Underdetermined', 'Several deep population histories can produce similar genetic summaries.'], admixture: ['Needs detail', 'The model must still explain how later populations and archaic mixing fit together.'], claim: ['Deep ancestry', 'This is a historical-identification claim, not a unique genetic prediction.'], mix: 'long-term mixing' }
       };
       const dateValues = ['3,000 years ago', '6,000 years ago', '100,000 years ago', '800,000 years ago'];
       const dateYears = [3000, 6000, 100000, 800000];
@@ -161,10 +165,8 @@
       const $ = (selector) => root.querySelector(selector);
       let activeModel = 'genealogical';
       function metric(key, data) {
-        const [label, width, klass, note] = data;
+        const [label, note] = data;
         $('#al-' + key).textContent = label;
-        const bar = $('#al-' + (key === 'diversity' ? 'div' : key === 'admixture' ? 'adm' : 'claim') + '-bar');
-        bar.className = klass; bar.style.width = width + '%';
         $('#al-' + (key === 'diversity' ? 'div' : key === 'admixture' ? 'adm' : 'claim') + '-note').textContent = note;
       }
       function selectModel(name) {
@@ -176,11 +178,21 @@
         $('#al-mixing').disabled = exclusive;
         $('#al-mixing-field').classList.toggle('is-unavailable', exclusive);
         $('#al-mixing-note').hidden = !exclusive;
+        root.querySelector('.al-pop.outside').style.display = exclusive ? 'none' : 'block';
+        root.querySelector('.al-tag.out').textContent = exclusive ? '' : 'other population';
         if (exclusive) { $('#al-mixing').value = 0; $('#al-mixing-v').textContent = 'not applicable'; }
         else { $('#al-mixing-v').textContent = mixingValues[Number($('#al-mixing').value)]; }
         $('#al-population-label').textContent = exclusive ? 'Population after the origin' : 'Wider population at that time';
+        const deepHistory = dateYears[Number($('#al-date').value)] >= 100000;
+        if (name === 'recent' && deepHistory) {
+          $('#al-title').textContent = 'An ancient exclusive biological pair';
+          $('#al-description').textContent = 'All modern human DNA descends from only two people in deep history. This remains an exclusive biological-origin claim, not a recent one.';
+          $('#al-reading').innerHTML = '<strong>Plain-language reading:</strong> moving an exclusive pair deeper into history changes the predicted genetic consequences. It does not make the claim “recent”; it still requires a specific deep demographic model.';
+          metric('diversity', ['Needs quantitative comparison', 'The simulation shows the bottleneck effect, but a real fit requires comparison with human-genome data.']);
+          metric('admixture', ['Needs a history', 'The model must specify whether later admixture is among descendants of the pair or from a separate outside lineage.']);
+        }
         const scenarioText = {
-          recent: ['Recent exclusive biological pair', 'All later DNA is constrained to descend from one pair; mixing is excluded.'],
+          recent: [deepHistory ? 'Ancient exclusive biological pair' : 'Recent exclusive biological pair', 'All later DNA is constrained to descend from one pair; mixing is excluded.'],
           genealogical: ['Recent pair within a wider population', 'Genetic simulation tests the wider population; universal genealogy is a separate pedigree claim.'],
           ancient: ['Deep-history pair within a wider population', 'The genetic effect is underdetermined unless the wider population history is specified.']
         }[name];
@@ -191,6 +203,13 @@
         const exclusive = $('#al-origin').value === 'exclusive';
         const deepHistory = dateYears[Number($('#al-date').value)] >= 100000;
         selectModel(exclusive ? 'recent' : deepHistory ? 'ancient' : 'genealogical');
+        const positions = [76, 70, 38, 8];
+        const position = positions[Number($('#al-date').value)];
+        $('#al-time-marker').style.left = position + '%';
+        $('#al-time-marker span').textContent = dateValues[Number($('#al-date').value)];
+        $('.al-pop.adam').style.left = 'calc(' + position + '% - 24px)';
+        $('.al-tag.ad').style.left = 'calc(' + position + '% - 31px)';
+        $('#al-diagram-key').innerHTML = '<strong>Diagram key:</strong> outlines are population groups; lines are allowed biological ancestry; the orange marker is the selected time. This is conceptual, not population size or time to scale.';
       }
       $('#al-origin').addEventListener('change', updateScenario);
       $('#al-date').addEventListener('input', (event) => { $('#al-date-v').textContent = dateValues[Number(event.target.value)]; updateScenario(); });
@@ -218,7 +237,8 @@
           $('#al-sites-value').textContent = Math.round(stats.segregating_sites.mean).toLocaleString();
           $('#al-depth-value').textContent = Math.round(result.plain_language.mean_tree_depth_years).toLocaleString() + ' years';
           $('#al-comparison-value').textContent = Math.round(result.comparison.diversity_ratio * 100) + '%';
-          $('#al-real-reading').textContent = result.comparison.message + ' ' + result.interpretation;
+          $('#al-adam-result').textContent = result.adam_context.answer;
+          $('#al-not-tested').textContent = result.adam_context.not_tested;
           output.hidden = false;
           status.textContent = result.limitation;
         } catch (error) {
