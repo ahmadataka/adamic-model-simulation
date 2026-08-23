@@ -1,0 +1,173 @@
+<div id="adamic-lab" aria-label="Adamic Model Lab interface concept">
+  <style>
+    #adamic-lab {
+      --al-paper: light-dark(#f6f0e4, #171b1b);
+      --al-panel: light-dark(#fffdf8, #222828);
+      --al-ink: light-dark(#182322, #edf4ed);
+      --al-muted: light-dark(#63706a, #a9b5ae);
+      --al-line: light-dark(#d8d1c4, #3b4643);
+      --al-moss: light-dark(#1f6650, #82c6a5);
+      --al-clay: light-dark(#b45d38, #f0a17e);
+      --al-gold: light-dark(#c99220, #f1c866);
+      --al-sky: light-dark(#367795, #8ec9df);
+      color: var(--al-ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(circle at 80% -30%, light-dark(#dcebd7, #263b33), transparent 43%), var(--al-paper);
+      border: 1px solid var(--al-line);
+      border-radius: 18px;
+      overflow: hidden;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    #adamic-lab * { box-sizing: border-box; }
+    #adamic-lab button, #adamic-lab input { font: inherit; }
+    #adamic-lab .al-top {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 19px 24px 16px; border-bottom: 1px solid var(--al-line);
+    }
+    #adamic-lab h1 { font-size: 22px; margin: 0; letter-spacing: -.02em; }
+    #adamic-lab .al-sub { font: 12px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); margin-top: 3px; }
+    #adamic-lab .al-step { color: var(--al-moss); font: 700 11px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+    #adamic-lab .al-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr) 235px; min-height: 500px; }
+    #adamic-lab .al-side { padding: 18px; background: color-mix(in srgb, var(--al-panel) 78%, transparent); }
+    #adamic-lab .al-left { border-right: 1px solid var(--al-line); }
+    #adamic-lab .al-right { border-left: 1px solid var(--al-line); }
+    #adamic-lab .al-kicker { font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--al-muted); margin: 0 0 9px; }
+    #adamic-lab .al-models { display: grid; gap: 7px; }
+    #adamic-lab .al-model {
+      appearance: none; width: 100%; text-align: left; padding: 10px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--al-ink); cursor: pointer;
+    }
+    #adamic-lab .al-model:hover { background: color-mix(in srgb, var(--al-moss) 7%, transparent); }
+    #adamic-lab .al-model[aria-pressed="true"] { background: color-mix(in srgb, var(--al-moss) 13%, transparent); border-color: color-mix(in srgb, var(--al-moss) 42%, var(--al-line)); }
+    #adamic-lab .al-model strong { display: block; font-size: 13px; font-weight: 700; }
+    #adamic-lab .al-model span { display: block; margin-top: 3px; font: 11px/1.25 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-inputs { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--al-line); }
+    #adamic-lab .al-field { margin: 0 0 17px; }
+    #adamic-lab .al-field label { display: flex; justify-content: space-between; gap: 8px; font: 600 11px/1.3 ui-sans-serif, system-ui, sans-serif; }
+    #adamic-lab .al-value { color: var(--al-moss); white-space: nowrap; }
+    #adamic-lab input[type="range"] { appearance: none; width: 100%; height: 5px; border-radius: 3px; margin: 9px 0 0; background: var(--al-line); accent-color: var(--al-moss); cursor: pointer; }
+    #adamic-lab .al-center { padding: 22px 24px; min-width: 0; }
+    #adamic-lab .al-center h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -.02em; }
+    #adamic-lab .al-center .al-description { font: 13px/1.42 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); margin: 0 0 21px; }
+    #adamic-lab .al-timeline { position: relative; height: 216px; border: 1px solid var(--al-line); background: var(--al-panel); border-radius: 10px; overflow: hidden; }
+    #adamic-lab .al-era { position: absolute; top: 0; bottom: 0; border-right: 1px dashed color-mix(in srgb, var(--al-line) 75%, transparent); }
+    #adamic-lab .al-era:nth-child(1) { left: 0; width: 32%; background: color-mix(in srgb, var(--al-gold) 7%, transparent); }
+    #adamic-lab .al-era:nth-child(2) { left: 32%; width: 34%; background: color-mix(in srgb, var(--al-sky) 5%, transparent); }
+    #adamic-lab .al-era:nth-child(3) { left: 66%; width: 34%; }
+    #adamic-lab .al-era-label { position: absolute; top: 11px; left: 10px; font: 10px ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); white-space: nowrap; }
+    #adamic-lab .al-pop { position: absolute; border: 2px solid; border-radius: 999px; opacity: .92; }
+    #adamic-lab .al-pop.outside { left: 9%; top: 83px; width: 245px; height: 82px; border-color: var(--al-sky); background: color-mix(in srgb, var(--al-sky) 13%, transparent); }
+    #adamic-lab .al-pop.adam { left: 44%; top: 102px; width: 47px; height: 47px; border-color: var(--al-clay); background: color-mix(in srgb, var(--al-clay) 22%, transparent); z-index: 2; }
+    #adamic-lab .al-pop.descendants { left: 55%; top: 73px; width: 130px; height: 97px; border-color: var(--al-moss); background: color-mix(in srgb, var(--al-moss) 15%, transparent); }
+    #adamic-lab .al-pop.modern { left: 77%; top: 45px; width: 170px; height: 143px; border-color: var(--al-moss); background: color-mix(in srgb, var(--al-moss) 8%, transparent); }
+    #adamic-lab .al-flow { position: absolute; height: 2px; background: var(--al-clay); transform-origin: left center; opacity: .9; }
+    #adamic-lab .al-flow.one { width: 57px; left: 47%; top: 125px; transform: rotate(-17deg); }
+    #adamic-lab .al-flow.two { width: 60px; left: 65%; top: 107px; transform: rotate(-10deg); background: var(--al-moss); }
+    #adamic-lab .al-tag { position: absolute; font: 10px/1.2 ui-sans-serif, system-ui, sans-serif; color: var(--al-ink); white-space: nowrap; }
+    #adamic-lab .al-tag.out { left: 18px; top: 174px; }
+    #adamic-lab .al-tag.ad { left: 41%; top: 158px; color: var(--al-clay); font-weight: 700; }
+    #adamic-lab .al-tag.mix { left: 58%; top: 177px; color: var(--al-moss); font-weight: 700; }
+    #adamic-lab .al-tag.now { right: 11px; top: 194px; }
+    #adamic-lab .al-scale { display: flex; justify-content: space-between; margin-top: 7px; font: 10px ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-reading { margin-top: 19px; padding: 13px 14px; border-left: 3px solid var(--al-moss); background: color-mix(in srgb, var(--al-moss) 8%, transparent); font: 13px/1.42 ui-sans-serif, system-ui, sans-serif; }
+    #adamic-lab .al-reading strong { color: var(--al-moss); }
+    #adamic-lab .al-meter { margin: 0 0 20px; }
+    #adamic-lab .al-meter-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font: 12px/1.3 ui-sans-serif, system-ui, sans-serif; }
+    #adamic-lab .al-meter-head strong { font: 700 14px Georgia, serif; }
+    #adamic-lab .al-track { height: 9px; display: flex; overflow: hidden; border-radius: 999px; background: var(--al-line); margin-top: 7px; }
+    #adamic-lab .al-track span { display: block; height: 100%; }
+    #adamic-lab .al-good { background: var(--al-moss); } .al-warn { background: var(--al-gold); } .al-bad { background: var(--al-clay); }
+    #adamic-lab .al-meter small { display: block; margin-top: 6px; font: 11px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-reference { padding-top: 16px; border-top: 1px solid var(--al-line); }
+    #adamic-lab .al-reference p { margin: 0; font: 11px/1.45 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-reference a { color: var(--al-moss); font-weight: 700; text-decoration: none; }
+    #adamic-lab .al-footer { display: flex; justify-content: space-between; gap: 16px; padding: 12px 24px; border-top: 1px solid var(--al-line); font: 11px/1.4 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-footer strong { color: var(--al-ink); }
+    @media (max-width: 760px) {
+      #adamic-lab .al-layout { grid-template-columns: 1fr; }
+      #adamic-lab .al-left, #adamic-lab .al-right { border: 0; border-top: 1px solid var(--al-line); }
+      #adamic-lab .al-left { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+      #adamic-lab .al-inputs { margin-top: 0; padding-top: 0; border-top: 0; }
+    }
+    @media (max-width: 460px) {
+      #adamic-lab .al-top, #adamic-lab .al-footer { padding-left: 16px; padding-right: 16px; }
+      #adamic-lab .al-center { padding: 19px 16px; }
+      #adamic-lab .al-left { display: block; }
+      #adamic-lab .al-inputs { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--al-line); }
+      #adamic-lab .al-pop.outside { width: 57%; } #adamic-lab .al-pop.modern { width: 35%; }
+      #adamic-lab .al-footer { display: block; } #adamic-lab .al-footer span + span { display: block; margin-top: 4px; }
+    }
+  </style>
+  <div class="al-top">
+    <div><h1>Adamic Model Lab</h1><div class="al-sub">Explore scenarios. See what today’s genetic evidence can and cannot distinguish.</div></div>
+    <div class="al-step">1. Choose a story &nbsp; 2. Test its trace</div>
+  </div>
+  <div class="al-layout">
+    <aside class="al-side al-left">
+      <section><p class="al-kicker">Start with a model</p><div class="al-models">
+        <button class="al-model" type="button" data-model="recent" aria-pressed="false"><strong>Recent, exclusive pair</strong><span>All biological ancestry begins with two people.</span></button>
+        <button class="al-model" type="button" data-model="genealogical" aria-pressed="true"><strong>Recent, genealogical Adam</strong><span>Adam becomes ancestor of all, within a wider population.</span></button>
+        <button class="al-model" type="button" data-model="ancient" aria-pressed="false"><strong>Ancient ancestral pair</strong><span>A deep origin within an archaic human population.</span></button>
+      </div></section>
+      <section class="al-inputs"><p class="al-kicker">Tune only what matters</p>
+        <div class="al-field"><label for="al-date">When does Adam enter the story? <span class="al-value" id="al-date-v">6,000 years ago</span></label><input id="al-date" type="range" min="0" max="3" value="1" step="1"></div>
+        <div class="al-field"><label for="al-population">Wider population at that time <span class="al-value" id="al-population-v">5,000 people</span></label><input id="al-population" type="range" min="0" max="3" value="2" step="1"></div>
+        <div class="al-field"><label for="al-mixing">Mixing with other groups <span class="al-value" id="al-mixing-v">moderate</span></label><input id="al-mixing" type="range" min="0" max="2" value="1" step="1"></div>
+      </section>
+    </aside>
+    <main class="al-center">
+      <p class="al-kicker">What this scenario means</p>
+      <h2 id="al-title">A recent universal family tree</h2>
+      <p class="al-description" id="al-description">Over generations, every living person can inherit a place in Adam’s family tree even while most DNA comes from many other ancestors.</p>
+      <div class="al-timeline" aria-label="Illustrated ancestry timeline">
+        <div class="al-era"><span class="al-era-label">deep past</span></div><div class="al-era"><span class="al-era-label">Adam’s time</span></div><div class="al-era"><span class="al-era-label">recorded history</span></div>
+        <div class="al-pop outside"></div><div class="al-pop adam"></div><div class="al-pop descendants"></div><div class="al-pop modern"></div>
+        <div class="al-flow one"></div><div class="al-flow two"></div>
+        <span class="al-tag out">other people</span><span class="al-tag ad">Adam + Eve</span><span class="al-tag mix" id="al-mix-label">intermarriage</span><span class="al-tag now">living populations</span>
+      </div>
+      <div class="al-scale"><span>1 million years ago</span><span>100,000</span><span>10,000</span><span>today</span></div>
+      <div class="al-reading" id="al-reading"><strong>Plain-language reading:</strong> this is compatible with a shared genealogical ancestry claim. It does not say that all of today’s DNA descends only from one pair.</div>
+    </main>
+    <aside class="al-side al-right">
+      <section><p class="al-kicker">Evidence fit</p>
+        <div class="al-meter"><div class="al-meter-head"><span>Genetic diversity</span><strong id="al-diversity">Fits</strong></div><div class="al-track"><span id="al-div-bar" class="al-good" style="width:82%"></span></div><small id="al-div-note">A wider population preserves the diversity observed in human genomes.</small></div>
+        <div class="al-meter"><div class="al-meter-head"><span>Ancient DNA &amp; admixture</span><strong id="al-admixture">Fits</strong></div><div class="al-track"><span id="al-adm-bar" class="al-good" style="width:78%"></span></div><small id="al-adm-note">Other human groups and later mixing remain part of the history.</small></div>
+        <div class="al-meter"><div class="al-meter-head"><span>Claim this model supports</span><strong id="al-claim">Genealogy</strong></div><div class="al-track"><span id="al-claim-bar" class="al-good" style="width:84%"></span></div><small id="al-claim-note">“Ancestor of everyone” is different from “source of all DNA.”</small></div>
+      </section>
+      <section class="al-reference"><p class="al-kicker">Why this rating?</p><p id="al-reference">Ratings compare simulated patterns with population diversity, deep coalescence, and evidence of archaic admixture. <a href="#adamic-lab" id="al-source">View the evidence trail</a></p></section>
+    </aside>
+  </div>
+  <div class="al-footer"><span><strong>Designed for learning:</strong> labels describe evidence tension, not theological truth.</span><span>Every result should open its assumptions and sources.</span></div>
+  <script>
+    (() => {
+      const root = document.getElementById('adamic-lab');
+      const models = {
+        recent: { title: 'A recent exclusive biological pair', desc: 'All modern human DNA descends from only two people in the recent past. This is a clear claim, and it makes a strong genetic prediction.', reading: '<strong>Plain-language reading:</strong> a recent two-person biological origin leaves much less genetic diversity than we observe. Current population genetics places this scenario under strong tension.', diversity: ['Strong tension', 22, 'al-bad', 'Observed human diversity reflects many ancestral lineages, not a recent two-person origin.'], admixture: ['Strong tension', 18, 'al-bad', 'Known mixing with other human groups conflicts with exclusive descent.'], claim: ['Biological origin', 24, 'al-bad', 'The model makes a direct genetic claim that can be tested.'], mix: 'no outside ancestry' },
+        genealogical: { title: 'A recent universal family tree', desc: 'Over generations, every living person can inherit a place in Adam’s family tree even while most DNA comes from many other ancestors.', reading: '<strong>Plain-language reading:</strong> this is compatible with a shared genealogical ancestry claim. It does not say that all of today’s DNA descends only from one pair.', diversity: ['Fits', 82, 'al-good', 'A wider population preserves the diversity observed in human genomes.'], admixture: ['Fits', 78, 'al-good', 'Other human groups and later mixing remain part of the history.'], claim: ['Genealogy', 84, 'al-good', '“Ancestor of everyone” is different from “source of all DNA.”'], mix: 'intermarriage' },
+        ancient: { title: 'An ancient pair within deep human history', desc: 'Adam and Eve enter far earlier, within a larger archaic population. Genetic signals have more time to overlap with deep population history.', reading: '<strong>Plain-language reading:</strong> this can be less directly constrained than a recent exclusive pair, but present genetics does not uniquely point to a particular ancient pair.', diversity: ['Open question', 58, 'al-warn', 'An ancient placement eases some diversity constraints but does not itself explain the patterns.'], admixture: ['Needs detail', 56, 'al-warn', 'The scenario must specify how later populations and archaic mixing fit together.'], claim: ['Deep ancestry', 61, 'al-warn', 'The evidence may be compatible with several histories, not one unique event.'], mix: 'long-term mixing' }
+      };
+      const dateValues = ['6,000 years ago', '6,000 years ago', '100,000 years ago', '800,000 years ago'];
+      const populationValues = ['2 people', '100 people', '5,000 people', '20,000 people'];
+      const mixingValues = ['none', 'moderate', 'high'];
+      const $ = (selector) => root.querySelector(selector);
+      function metric(key, data) {
+        const [label, width, klass, note] = data;
+        $('#al-' + key).textContent = label;
+        const bar = $('#al-' + (key === 'diversity' ? 'div' : key === 'admixture' ? 'adm' : 'claim') + '-bar');
+        bar.className = klass; bar.style.width = width + '%';
+        $('#al-' + (key === 'diversity' ? 'div' : key === 'admixture' ? 'adm' : 'claim') + '-note').textContent = note;
+      }
+      function selectModel(name) {
+        const model = models[name];
+        root.querySelectorAll('.al-model').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.model === name)));
+        $('#al-title').textContent = model.title; $('#al-description').textContent = model.desc; $('#al-reading').innerHTML = model.reading; $('#al-mix-label').textContent = model.mix;
+        metric('diversity', model.diversity); metric('admixture', model.admixture); metric('claim', model.claim);
+      }
+      root.querySelectorAll('.al-model').forEach((button) => button.addEventListener('click', () => selectModel(button.dataset.model)));
+      [['#al-date', '#al-date-v', dateValues], ['#al-population', '#al-population-v', populationValues], ['#al-mixing', '#al-mixing-v', mixingValues]].forEach(([input, output, values]) => {
+        $(input).addEventListener('input', (event) => { $(output).textContent = values[Number(event.target.value)]; });
+      });
+      $('#al-source').addEventListener('click', (event) => { event.preventDefault(); $('#al-reference').innerHTML = 'Evidence trail: genetic diversity, deep ancestry estimates, and archaic admixture are assessed separately. <a href="#adamic-lab" id="al-source">Return to summary</a>'; });
+    })();
+  </script>
+</div>
