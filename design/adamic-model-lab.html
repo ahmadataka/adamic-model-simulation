@@ -43,9 +43,12 @@
     #adamic-lab .al-model span { display: block; margin-top: 3px; font: 11px/1.25 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-inputs { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--al-line); }
     #adamic-lab .al-field { margin: 0 0 17px; }
+    #adamic-lab .al-field.is-unavailable { opacity: .55; }
     #adamic-lab .al-field label { display: flex; justify-content: space-between; gap: 8px; font: 600 11px/1.3 ui-sans-serif, system-ui, sans-serif; }
     #adamic-lab .al-value { color: var(--al-moss); white-space: nowrap; }
     #adamic-lab input[type="range"] { appearance: none; width: 100%; height: 5px; border-radius: 3px; margin: 9px 0 0; background: var(--al-line); accent-color: var(--al-moss); cursor: pointer; }
+    #adamic-lab input[type="range"]:disabled { cursor: not-allowed; accent-color: var(--al-muted); }
+    #adamic-lab .al-control-note { margin: 7px 0 0; font: 10px/1.35 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-center { padding: 22px 24px; min-width: 0; }
     #adamic-lab .al-center h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -.02em; }
     #adamic-lab .al-center .al-description { font: 13px/1.42 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); margin: 0 0 21px; }
@@ -88,6 +91,10 @@
     #adamic-lab .al-real-output { padding: 10px; border-radius: 7px; background: color-mix(in srgb, var(--al-moss) 8%, transparent); font: 11px/1.4 ui-sans-serif, system-ui, sans-serif; }
     #adamic-lab .al-real-output[hidden] { display: none; }
     #adamic-lab .al-real-output strong { color: var(--al-moss); }
+    #adamic-lab .al-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+    #adamic-lab .al-result-grid div { padding: 7px; border: 1px solid color-mix(in srgb, var(--al-moss) 20%, transparent); background: var(--al-panel); }
+    #adamic-lab .al-result-grid span { display: block; font: 10px/1.2 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
+    #adamic-lab .al-result-grid b { display: block; margin-top: 3px; font: 700 13px/1.2 Georgia, serif; color: var(--al-ink); }
     #adamic-lab .al-footer { display: flex; justify-content: space-between; gap: 16px; padding: 12px 24px; border-top: 1px solid var(--al-line); font: 11px/1.4 ui-sans-serif, system-ui, sans-serif; color: var(--al-muted); }
     #adamic-lab .al-footer strong { color: var(--al-ink); }
     @media (max-width: 760px) {
@@ -118,8 +125,8 @@
       </div></section>
       <section class="al-inputs"><p class="al-kicker">Tune only what matters</p>
         <div class="al-field"><label for="al-date">When does Adam enter the story? <span class="al-value" id="al-date-v">6,000 years ago</span></label><input id="al-date" type="range" min="0" max="3" value="1" step="1"></div>
-        <div class="al-field"><label for="al-population">Wider population at that time <span class="al-value" id="al-population-v">5,000 people</span></label><input id="al-population" type="range" min="0" max="3" value="2" step="1"></div>
-        <div class="al-field"><label for="al-mixing">Mixing with other groups <span class="al-value" id="al-mixing-v">moderate</span></label><input id="al-mixing" type="range" min="0" max="2" value="1" step="1"></div>
+        <div class="al-field"><label for="al-population"><span id="al-population-label">Wider population at that time</span> <span class="al-value" id="al-population-v">5,000 people</span></label><input id="al-population" type="range" min="0" max="3" value="2" step="1"></div>
+        <div class="al-field" id="al-mixing-field"><label for="al-mixing">Mixing with other groups <span class="al-value" id="al-mixing-v">moderate</span></label><input id="al-mixing" type="range" min="0" max="2" value="1" step="1"><p class="al-control-note" id="al-mixing-note" hidden>Not applicable: this model excludes outside biological ancestry.</p></div>
       </section>
     </aside>
     <main class="al-center">
@@ -141,7 +148,7 @@
         <div class="al-meter"><div class="al-meter-head"><span>Ancient DNA &amp; admixture</span><strong id="al-admixture">Fits</strong></div><div class="al-track"><span id="al-adm-bar" class="al-good" style="width:78%"></span></div><small id="al-adm-note">Other human groups and later mixing remain part of the history.</small></div>
         <div class="al-meter"><div class="al-meter-head"><span>Claim this model supports</span><strong id="al-claim">Genealogy</strong></div><div class="al-track"><span id="al-claim-bar" class="al-good" style="width:84%"></span></div><small id="al-claim-note">“Ancestor of everyone” is different from “source of all DNA.”</small></div>
       </section>
-      <section class="al-real-run"><p class="al-kicker">Real simulation</p><button type="button" class="al-run" id="al-run">Run genetic simulation</button><p class="al-run-status" id="al-run-status" role="status">Runs 4 seeded msprime replicates with the selected assumptions.</p><div class="al-real-output" id="al-real-output" hidden><strong>Simulated output</strong><br><span id="al-real-stats"></span><br><span id="al-real-reading"></span></div></section>
+      <section class="al-real-run"><p class="al-kicker">Real simulation</p><button type="button" class="al-run" id="al-run">Run genetic simulation</button><p class="al-run-status" id="al-run-status" role="status">Runs 4 seeded msprime replicates with the selected assumptions.</p><div class="al-real-output" id="al-real-output" hidden><strong>What this run produced</strong><div class="al-result-grid"><div><span>DNA differences</span><b id="al-difference-value"></b><span>per 100,000 bases</span></div><div><span>Variable DNA positions</span><b id="al-sites-value"></b><span>in a 1-million-base region</span></div><div><span>Average lineage depth</span><b id="al-depth-value"></b><span>oldest ancestor in each tree</span></div><div><span>Scenario comparison</span><b id="al-comparison-value"></b><span>diversity vs. baseline</span></div></div><span id="al-real-reading"></span></div></section>
       <section class="al-reference"><p class="al-kicker">Why this rating?</p><p id="al-reference">Ratings compare simulated patterns with population diversity, deep coalescence, and evidence of archaic admixture. <a href="#adamic-lab" id="al-source">View the evidence trail</a></p></section>
     </aside>
   </div>
@@ -174,6 +181,13 @@
         root.querySelectorAll('.al-model').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.model === name)));
         $('#al-title').textContent = model.title; $('#al-description').textContent = model.desc; $('#al-reading').innerHTML = model.reading; $('#al-mix-label').textContent = model.mix;
         metric('diversity', model.diversity); metric('admixture', model.admixture); metric('claim', model.claim);
+        const exclusive = name === 'recent';
+        $('#al-mixing').disabled = exclusive;
+        $('#al-mixing-field').classList.toggle('is-unavailable', exclusive);
+        $('#al-mixing-note').hidden = !exclusive;
+        if (exclusive) { $('#al-mixing').value = 0; $('#al-mixing-v').textContent = 'not applicable'; }
+        else { $('#al-mixing-v').textContent = mixingValues[Number($('#al-mixing').value)]; }
+        $('#al-population-label').textContent = exclusive ? 'Population after the origin' : 'Wider population at that time';
       }
       root.querySelectorAll('.al-model').forEach((button) => button.addEventListener('click', () => selectModel(button.dataset.model)));
       [['#al-date', '#al-date-v', dateValues], ['#al-population', '#al-population-v', populationValues], ['#al-mixing', '#al-mixing-v', mixingValues]].forEach(([input, output, values]) => {
@@ -196,8 +210,11 @@
           const result = await response.json();
           if (!response.ok) throw new Error(result.error || 'Simulation failed.');
           const stats = result.statistics;
-          $('#al-real-stats').textContent = 'Diversity: ' + stats.pairwise_diversity.mean.toExponential(2) + ' | Segregating sites: ' + Math.round(stats.segregating_sites.mean) + ' | Mean tree height: ' + Math.round(stats.mean_tree_height_generations.mean) + ' generations.';
-          $('#al-real-reading').textContent = result.interpretation;
+          $('#al-difference-value').textContent = result.plain_language.differences_per_100kb.toFixed(1);
+          $('#al-sites-value').textContent = Math.round(stats.segregating_sites.mean).toLocaleString();
+          $('#al-depth-value').textContent = Math.round(result.plain_language.mean_tree_depth_years).toLocaleString() + ' years';
+          $('#al-comparison-value').textContent = Math.round(result.comparison.diversity_ratio * 100) + '%';
+          $('#al-real-reading').textContent = result.comparison.message + ' ' + result.interpretation;
           output.hidden = false;
           status.textContent = result.limitation;
         } catch (error) {

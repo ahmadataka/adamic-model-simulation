@@ -23,7 +23,12 @@ class SimulationTests(unittest.TestCase):
         )
         self.assertGreater(result["statistics"]["pairwise_diversity"]["mean"], 0)
         self.assertGreater(result["statistics"]["segregating_sites"]["mean"], 0)
+        self.assertEqual(result["comparison"]["diversity_ratio"], 1.0)
         self.assertIn("cannot", result["limitation"])
+
+    def test_exclusive_model_forces_mixing_to_none(self):
+        scenario = parse_scenario({"model": "recent", "mixing": "high"})
+        self.assertEqual(scenario.mixing, "none")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from statistics import fmean, pstdev
 from typing import Any
 
@@ -56,6 +56,10 @@ def parse_scenario(payload: dict[str, Any]) -> Scenario:
         raise SimulationInputError("The wider population must be between 2 and 100,000 people.")
     if not 1 <= replicates <= 12:
         raise SimulationInputError("Run between 1 and 12 replicates at a time.")
+
+    # Exclusive biological descent rules out a second group by definition.
+    if model == "recent":
+        mixing = "none"
 
     return Scenario(model, adam_time_years, wider_population, mixing, replicates, seed)
 
@@ -130,6 +134,16 @@ def _summary(values: list[float]) -> dict[str, float]:
     return {"mean": fmean(values), "sd": pstdev(values) if len(values) > 1 else 0.0}
 
 
+def _summarise_results(results: list[dict[str, float]]) -> dict[str, dict[str, float]]:
+    return {
+        "pairwise_diversity": _summary([item["pairwise_diversity"] for item in results]),
+        "segregating_sites": _summary([item["segregating_sites"] for item in results]),
+        "mean_tree_height_generations": _summary(
+            [item["mean_tree_height_generations"] for item in results]
+        ),
+    }
+
+
 def _interpretation(scenario: Scenario) -> str:
     if scenario.model == "recent":
         return (
@@ -147,6 +161,20 @@ def _interpretation(scenario: Scenario) -> str:
     )
 
 
+def _comparison_message(scenario: Scenario, diversity_ratio: float) -> str:
+    if scenario.model == "recent":
+        return (
+            f"Compared with a matched wider-population baseline, this run retains about "
+            f"{diversity_ratio * 100:.0f}% as much simulated DNA diversity."
+        )
+    if scenario.model == "genealogical":
+        return "This is the matched wider-population baseline used for scenario comparisons."
+    return (
+        "With the same demographic assumptions, selecting an ancient pair does not add a "
+        "separate genetic bottleneck here. Its genetic output therefore matches the baseline."
+    )
+
+
 def run_simulation(
     payload: dict[str, Any],
     *,
@@ -159,6 +187,19 @@ def run_simulation(
         _simulate_once(scenario, scenario.seed + index, sequence_length, sample_size)
         for index in range(scenario.replicates)
     ]
+    statistics = _summarise_results(results)
+    baseline_scenario = replace(scenario, model="genealogical")
+    if scenario.model == "recent":
+        baseline_scenario = replace(baseline_scenario, mixing="none")
+    baseline_results = [
+        _simulate_once(baseline_scenario, scenario.seed + index, sequence_length, sample_size)
+        for index in range(scenario.replicates)
+    ]
+    baseline_statistics = _summarise_results(baseline_results)
+    diversity_ratio = (
+        statistics["pairwise_diversity"]["mean"]
+        / baseline_statistics["pairwise_diversity"]["mean"]
+    )
     return {
         "scenario": {
             "model": scenario.model,
@@ -168,12 +209,17 @@ def run_simulation(
             "replicates": scenario.replicates,
             "seed": scenario.seed,
         },
-        "statistics": {
-            "pairwise_diversity": _summary([item["pairwise_diversity"] for item in results]),
-            "segregating_sites": _summary([item["segregating_sites"] for item in results]),
-            "mean_tree_height_generations": _summary(
-                [item["mean_tree_height_generations"] for item in results]
+        "statistics": statistics,
+        "plain_language": {
+            "differences_per_100kb": statistics["pairwise_diversity"]["mean"] * 100_000,
+            "mean_tree_depth_years": (
+                statistics["mean_tree_height_generations"]["mean"] * YEARS_PER_GENERATION
             ),
+        },
+        "comparison": {
+            "baseline": "matched wider-population scenario",
+            "diversity_ratio": diversity_ratio,
+            "message": _comparison_message(scenario, diversity_ratio),
         },
         "assumptions": {
             "years_per_generation": YEARS_PER_GENERATION,
